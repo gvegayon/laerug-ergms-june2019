@@ -1,0 +1,324 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[10pt,ignorenonframetext,aspectratio=169,]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={What drives social networks?A gentle introduction to exponential random graph models (with a focus on  small networks)},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+% Mathematical functions
+\newcommand{\isone}[1]{{\boldsymbol{1}\left( #1 \right)}}
+\renewcommand{\Pr}[1]{{\mathbb{P}\left(#1\right) }}
+\newcommand{\f}[1]{{f\left(#1\right) }}
+\newcommand{\Prcond}[2]{{\mbox{Pr}\left(#1\vphantom{#2}\;\right|\left.\vphantom{#1}#2\right)}}
+\newcommand{\fcond}[2]{{f\left(#1|#2\right) }}
+\newcommand{\Expected}[1]{{\mathbb{E}\left\{#1\right\}}}
+\newcommand{\ExpectedCond}[2]{{\mathbb{E}\left\{#1\vphantom{#2}\;\right|\left.\vphantom{#1}#2\right\}}}
+
+\newcommand{\Likelihood}[2]{\text{L}\left(#1 \left|\vphantom{#1}#2\right.\right)}
+\newcommand{\sufstats}[1]{s\left(#1\right)}
+\renewcommand{\exp}[1]{\mbox{exp}\left\{#1\right\}}
+\newcommand{\transpose}[1]{{#1}^\mathbf{t}}
+
+% Objects
+\newcommand{\params}{\theta}
+\newcommand{\Params}{\Theta}
+\newcommand{\Graph}{\mathbf{G}}
+\newcommand{\graph}{\mathbf{g}}
+\newcommand{\GRAPH}{\mathcal{G}}
+\newcommand{\Adjmat}{\mathbf{A}}
+\newcommand{\adjmat}{\mathbf{a}}
+\newcommand{\DEPVAR}{\mathcal{Y}}
+\newcommand{\Depvar}{Y}
+\newcommand{\depvar}{y}
+
+\newcommand{\INDEPVAR}{\mathcal{X}}
+\newcommand{\Indepvar}{\mathbf{X}}
+\newcommand{\indepvar}{\mathbf{x}}
+
+
+% tricks for two column in Rmarkdown
+\def\begincols{\begin{columns}[c]}
+\def\begincol{\begin{column}[c]}
+\def\endcol{\end{column}}
+\def\endcols{\end{columns}}
+
+\graphicspath{{./fig/}}
+
+% Theme 
+\usecolortheme{seagull}
+\usefonttheme{structurebold}
+
+\setbeamertemplate{footline}[frame number]
+
+\addtobeamertemplate{background canvas}{\transfade[duration=.5]}{}
+
+%% NEED THIS FOR CANCY TEX
+\usepackage{pstricks}
+
+% Colors
+\definecolor{USCCardinal}{HTML}{990000} % 153 0 0 in RGB
+\definecolor{USCGold}{HTML}{FFCC00}
+\definecolor{USCGray}{HTML}{CCCCCC}
+
+% To use the function \sout
+\usepackage{ulem}
+\usepackage{tabularx, booktabs}
+
+% \bibliography{bibliography.bib}
+
+\title{What drives social networks?\linebreak[4]A gentle introduction to
+exponential random graph models (with a focus on \color{USCCardinal}
+small networks\color{black})}
+\author{\textbf{George G Vega Yon}}
+\providecommand{\institute}[1]{}
+\institute{\includegraphics[width=.15\linewidth]{usc.pdf}\linebreak[4]Department of
+Preventive Medicine}
+\date{LAERUG\linebreak[4]June 10, 2019}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Social networks}
+\protect\hypertarget{social-networks}{}
+
+\begin{figure}
+\centering
+\includegraphics[height=.7\textheight]{ukfaculty-igraph.png}
+\caption{Friendship network of a UK university faculty. Source: \textbf{igraphdata} R package (Csardi, 2015). Figure drawn using the R package \textbf{netplot} (yours truly, https://github.com/usccana/netplot)}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{Exponential Family Random Graph Models (ERGMs)}
+\protect\hypertarget{exponential-family-random-graph-models-ergms}{}
+
+Why are you and I are \color{gray}\textit{[blank]} \color{black}?
+(friends, collaborators, etc.)
+
+\footnotesize
+
+\includegraphics{fig/friendly-terms.pdf} \normalsize
+
+\pause Let's build a model for this!
+
+\end{frame}
+
+\begin{frame}{ERGMs from scratch}
+\protect\hypertarget{ergms-from-scratch}{}
+
+We need to build a probability function\ldots{}\pause
+
+\begin{itemize}
+\item
+  First, we will focus on counts: ``How many edges?'', ``How many
+  homophilic ties?''. We will call them ``sufficient statistics''
+
+  \(\# edges, \#homophilic\;ties, \dots\) \pause
+\item
+  As we do in \sout{life} statistics, let's assume it is an additive
+  model (we add stuff up), in a weighted fashion (i.e.~we have model
+  parameters!)
+
+  \(\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots\)
+  \pause
+\item
+  And since we like things to be positive\ldots{} we just exponentiate
+  it!
+
+  \(\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}\)
+  \pause
+\item
+  Finally, as probabilities should add up to 1, we will divide the thing
+  by the sum of all possible cases (the ``normalizing constant'')
+
+  \(\frac{\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}}{\sum \exp{\dots}}\)\pause
+\end{itemize}
+
+You got yourself an ERGM!
+
+\end{frame}
+
+\begin{frame}{ERGMs\ldots{} the \textit{lingua franca} of SNA}
+\protect\hypertarget{ergms-the-of-sna}{}
+
+\begin{itemize}
+\item
+  Seeks to answer the question:
+  \emph{What local social structures gave origin to a given observed graph?}\pause
+\item
+  The model is centered around a vector of
+  \textbf{sufficient statistics} \(\sufstats{}\), and is operationalized
+  as:
+
+  \begin{equation}
+    \Prcond{\Graph = \graph}{\params, \Indepvar} = \frac{%
+        \exp{\transpose{\params}\sufstats{\graph, \Indepvar}}%  
+    }{
+        \kappa\left(\params, \Indepvar\right)
+    },\quad\forall \graph\in\GRAPH\label{eq:ergm}
+  \end{equation}
+
+  Where \(\kappa\left(\params, \Indepvar\right)\) is the normalizing
+  constant and equals
+  \(\sum_{\graph'\in\GRAPH}\exp{\transpose{\params}\sufstats{\graph', \Indepvar}}\).
+  \pause
+\item
+  The set of sufficient statistics reflects social and psychological
+  mechanisms that are hypothesized to drive the network structure.
+  Figure \autoref{fig:ergm-structs} shows some examples of values in
+  \(\sufstats{}\).\pause
+\item
+  In the case of directed networks, \(\GRAPH\) has \(2^{n(n-1)}\)
+  terms.\pause
+\item
+  See Wasserman, Pattison, Robins, Snijders, Handcock, Butts, and
+  others.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Structures}
+\protect\hypertarget{structures}{}
+
+\def\fig1width{.45\linewidth}
+\begin{figure}
+\centering
+\begin{tabular}{m{.2\linewidth}<\centering m{.4\linewidth}<\raggedright}
+\toprule Representation & Description  \\ \midrule
+\includegraphics[width=.45\linewidth]{terms/mutual.pdf} & Mutual Ties (Reciprocity)\linebreak[4]$\sum_{i\neq j}y_{ij}y_{ji}$  \\
+\includegraphics[width=.45\linewidth]{terms/ttriad.pdf} & Transitive Triad (Balance)\linebreak[4]$\sum_{i\neq j\neq k}y_{ij}y_{jk}y_{ik}$  \\
+\includegraphics[width=.45\linewidth]{terms/homophily.pdf} & Homophily\linebreak[4]$\sum_{i\neq j}y_{ij}\mathbf{1}\left(x_i=x_j\right)$ \\
+\includegraphics[width=.45\linewidth]{terms/nodeicov.pdf} & Covariate Effect for Incoming Ties\linebreak[4]$\sum_{i\neq j}y_{ij}x_j$ \\
+\includegraphics[width=.45\linewidth]{terms/fourcycle.pdf} & Four Cycle\linebreak[4]$\sum_{i\neq j \neq k \neq l}y_{ij}y_{jk}y_{kl}y_{li}$  \\
+\bottomrule
+\end{tabular}
+\caption{\label{fig:ergm-structs}Besides of the common edge count statistic (number of ties in a graph), ERGMs allow measuring other more complex structures that can be captured as sufficient statistics. }
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{References}
+\protect\hypertarget{references}{}
+
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-rmarkdown}{}%
+Allaire, JJ, Yihui Xie, Jonathan McPherson, Javier Luraschi, Kevin
+Ushey, Aron Atkins, Hadley Wickham, Joe Cheng, Winston Chang, and
+Richard Iannone. 2018. \emph{Rmarkdown: Dynamic Documents for R}.
+\url{https://rmarkdown.rstudio.com}.
+
+\leavevmode\hypertarget{ref-Csardi2015}{}%
+Csardi, Gabor. 2015. \emph{Igraphdata: A Collection of Network Data Sets
+for the 'Igraph' Package}.
+\url{https://CRAN.R-project.org/package=igraphdata}.
+
+\leavevmode\hypertarget{ref-Handcock2006}{}%
+Handcock, Mark, Peng Wang, Garry Robins, Tom Snijders, and Philippa
+Pattison. 2006. ``Recent developments in exponential random graph (p*)
+models for social networks.'' \emph{Social Networks} 29 (2): 192--215.
+\url{https://doi.org/10.1016/j.socnet.2006.08.003}.
+
+\leavevmode\hypertarget{ref-R}{}%
+R Core Team. 2018. \emph{R: A Language and Environment for Statistical
+Computing}. Vienna, Austria: R Foundation for Statistical Computing.
+\url{https://www.R-project.org/}.
+
+\leavevmode\hypertarget{ref-Wasserman1996}{}%
+Wasserman, Stanley, and Philippa Pattison. 1996. ``Logit models and
+logistic regressions for social networks: I. An introduction to Markov
+graphs andp.'' \emph{Psychometrika} 61 (3): 401--25.
+\url{https://doi.org/10.1007/BF02294547}.
+
+\leavevmode\hypertarget{ref-knitr}{}%
+Xie, Yihui. 2018. \emph{Knitr: A General-Purpose Package for Dynamic
+Report Generation in R}. \url{https://yihui.name/knitr/}.
+
+\end{frame}
+
+\end{document}

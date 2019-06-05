@@ -1,0 +1,118 @@
+---
+title: "What drives social networks?\\linebreak[4]A gentle introduction to exponential random graph models (with a focus on \\color{USCCardinal} small networks\\color{black})"
+#\\footnote{Contact: \\url{vegayon@usc.edu}. We thank members of our MURI research team, USC's Center for Applied Network Analysis, Andrew Slaughter, and attendees of the NASN 2018 conference for their comments.}"
+author:
+  - "\\textbf{George G Vega Yon}"
+date: "LAERUG\\linebreak[4]June 10, 2019"
+institute:
+  - "\\includegraphics[width=.15\\linewidth]{usc.pdf}\\linebreak[4]Department of Preventive Medicine"
+output:
+  beamer_presentation:
+    keep_tex: true
+    includes:
+      in_header: ergmitos-header.tex
+# classoption: handout
+fontsize: 10pt
+aspectratio: 169
+nocite: |
+  @Csardi2015, @knitr, @rmarkdown, @R, @Handcock2006, @Wasserman1996
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::knit_hooks$set(smallsize = function(before, options, envir) {
+    if (before) {
+        "\\footnotesize\n\n"
+    } else {
+        "\n\\normalsize\n\n"
+    }
+})
+knitr::opts_chunk$set(echo = TRUE, smallsize=TRUE)
+```
+
+## Social networks
+
+\begin{figure}
+\centering
+\includegraphics[height=.7\textheight]{ukfaculty-igraph.png}
+\caption{Friendship network of a UK university faculty. Source: \textbf{igraphdata} R package (Csardi, 2015). Figure drawn using the R package \textbf{netplot} (yours truly, https://github.com/usccana/netplot)}
+\end{figure}
+
+## Exponential Family Random Graph Models (ERGMs) 
+
+Why are you and I are \color{gray}\textit{[blank]} \color{black}? (friends, collaborators, etc.)
+
+```{r ergm-terms, echo=FALSE}
+knitr::include_graphics("fig/friendly-terms.pdf")
+```
+
+\pause Let's build a model for this!
+
+## ERGMs from scratch
+
+We need to build a probability function...\pause
+
+- First, we will focus on counts: "How many edges?", "How many homophilic ties?".
+  We will call them "sufficient statistics"
+  
+  $\# edges, \#homophilic\;ties, \dots$
+  \pause
+
+- As we do in \sout{life} statistics, let's assume it is an additive model (we add stuff up), in a weighted fashion (i.e. we have model parameters!)
+  
+  $\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots$
+  \pause
+
+- And since we like things to be positive... we just exponentiate it!
+  
+  $\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}$
+  \pause
+
+- Finally, as probabilities should add up to 1, we will divide the thing by the sum of all possible cases (the "normalizing constant")
+  
+  $\frac{\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}}{\sum \exp{\dots}}$\pause
+
+You got yourself an ERGM!
+
+## ERGMs... the \textit{lingua franca} of SNA
+
+- Seeks to answer the question: \emph{What local social structures gave origin to a given observed graph?}\pause
+
+- The model is centered around a vector of \textbf{sufficient statistics} $\sufstats{}$, and is operationalized as:
+  
+  \begin{equation}
+  	\Prcond{\Graph = \graph}{\params, \Indepvar} = \frac{%
+  		\exp{\transpose{\params}\sufstats{\graph, \Indepvar}}%	
+  	}{
+  		\kappa\left(\params, \Indepvar\right)
+  	},\quad\forall \graph\in\GRAPH\label{eq:ergm}
+  \end{equation}
+  
+  Where $\kappa\left(\params, \Indepvar\right)$ is the normalizing constant and equals $\sum_{\graph'\in\GRAPH}\exp{\transpose{\params}\sufstats{\graph', \Indepvar}}$. \pause
+  
+- The set of sufficient statistics reflects social and psychological mechanisms that are hypothesized to drive the network structure. Figure \autoref{fig:ergm-structs} shows some examples of values in $\sufstats{}$.\pause
+  
+- In the case of directed networks, $\GRAPH$ has $2^{n(n-1)}$ terms.\pause
+
+- See Wasserman, Pattison, Robins, Snijders, Handcock, Butts, and others.
+
+
+## Structures
+
+\def\fig1width{.45\linewidth}
+\begin{figure}
+\centering
+\begin{tabular}{m{.2\linewidth}<\centering m{.4\linewidth}<\raggedright}
+\toprule Representation & Description  \\ \midrule
+\includegraphics[width=\fig1width]{terms/mutual.pdf} & Mutual Ties (Reciprocity)\linebreak[4]$\sum_{i\neq j}y_{ij}y_{ji}$  \\
+\includegraphics[width=\fig1width]{terms/ttriad.pdf} & Transitive Triad (Balance)\linebreak[4]$\sum_{i\neq j\neq k}y_{ij}y_{jk}y_{ik}$  \\
+\includegraphics[width=\fig1width]{terms/homophily.pdf} & Homophily\linebreak[4]$\sum_{i\neq j}y_{ij}\mathbf{1}\left(x_i=x_j\right)$ \\
+\includegraphics[width=\fig1width]{terms/nodeicov.pdf} & Covariate Effect for Incoming Ties\linebreak[4]$\sum_{i\neq j}y_{ij}x_j$ \\
+\includegraphics[width=\fig1width]{terms/fourcycle.pdf} & Four Cycle\linebreak[4]$\sum_{i\neq j \neq k \neq l}y_{ij}y_{jk}y_{kl}y_{li}$  \\
+\bottomrule
+\end{tabular}
+\caption{\label{fig:ergm-structs}Besides of the common edge count statistic (number of ties in a graph), ERGMs allow measuring other more complex structures that can be captured as sufficient statistics. }
+\end{figure}
+
+
+## References 
