@@ -17,6 +17,7 @@ aspectratio: 169
 nocite: |
   @Csardi2015, @knitr, @rmarkdown, @R, @Handcock2006, @Wasserman1996
 bibliography: bibliography.bib
+handout: true
 ---
 
 ```{r setup, include=FALSE}
@@ -27,7 +28,8 @@ knitr::knit_hooks$set(smallsize = function(before, options, envir) {
         "\n\\normalsize\n\n"
     }
 })
-knitr::opts_chunk$set(echo = TRUE, smallsize=TRUE)
+knitr::opts_chunk$set(echo = TRUE, smallsize=TRUE, out.width = ".6\\linewidth",
+                      fig.align = "center")
 ```
 
 ## Social networks
@@ -37,6 +39,16 @@ knitr::opts_chunk$set(echo = TRUE, smallsize=TRUE)
 \includegraphics[height=.7\textheight]{ukfaculty-igraph.png}
 \caption{Friendship network of a UK university faculty. Source: \textbf{igraphdata} R package (Csardi, 2015). Figure drawn using the R package \textbf{netplot} (yours truly, https://github.com/usccana/netplot)}
 \end{figure}
+
+## What drives \sout{\color{USCCardinal}social} networks?
+
+If \color{gray}\textit{[blank]}\color{black}{} asks you to predict a network\pause
+
+\Huge What kind of model?\pause
+
+\Huge What features would you include?\pause
+
+\normalsize
 
 ## Exponential Family Random Graph Models (ERGMs) 
 
@@ -50,52 +62,225 @@ knitr::include_graphics("fig/friendly-terms.pdf")
 
 ## ERGMs from scratch
 
-We need to build a probability function...\pause
+We need to build a probability function for \includegraphics[width=.05\linewidth]{fig/g1.pdf}...\pause
 
-- First, we will focus on counts: "How many edges?", "How many homophilic ties?".
-  We will call them "sufficient statistics"
+\begin{centering}
+
+\def\tbw{.6\linewidth}
+
+\note{First, we will focus on counts: "How many edges?", "How many homophilic ties?".
+  We will call them "sufficient statistics"}
+  \note{As we do in \sout{life} statistics, let's assume it is an additive model (we add stuff up), in a weighted fashion (i.e. we have model parameters!)}
+\note{And since we like things to be positive... we just exponentiate it!}
+\note{Finally, as probabilities should add up to 1, we will divide the thing by the sum of all possible cases (the "normalizing constant")}
   
+  \begin{tcolorbox}[width=\tbw]
   $\# edges, \#homophilic\;ties, \dots$
-  \pause
-
-- As we do in \sout{life} statistics, let's assume it is an additive model (we add stuff up), in a weighted fashion (i.e. we have model parameters!)
-  
+  \end{tcolorbox}\pause
+  \begin{tcolorbox}[width=\tbw]
   $\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots$
-  \pause
-
-- And since we like things to be positive... we just exponentiate it!
-  
+  \end{tcolorbox}\pause
+  \begin{tcolorbox}[width=\tbw]
   $\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}$
-  \pause
-
-- Finally, as probabilities should add up to 1, we will divide the thing by the sum of all possible cases (the "normalizing constant")
+  \end{tcolorbox}\pause
+  \begin{tcolorbox}[width=\tbw]
+  $\frac{\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}}{\sum \exp{\dots}}$
+  \end{tcolorbox}\pause
   
-  $\frac{\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}}{\sum \exp{\dots}}$\pause
+\end{centering}
 
 You got yourself an ERGM!
 
 ## ERGMs... the \textit{lingua franca} of SNA
 
-- Seeks to answer the question: \emph{What local social structures gave origin to a given observed graph?}\pause
+<!-- - Seeks to answer the question: \emph{What local social structures gave origin to a given observed graph?}\pause -->
 
-- The model is centered around a vector of \textbf{sufficient statistics} $\sufstats{}$, and is operationalized as:
-  
-  \begin{equation}
-  	\Prcond{\Graph = \graph}{\params, \Indepvar} = \frac{%
-  		\exp{\transpose{\params}\sufstats{\graph, \Indepvar}}%	
-  	}{
-  		\kappa\left(\params, \Indepvar\right)
-  	},\quad\forall \graph\in\GRAPH\label{eq:ergm}
-  \end{equation}
-  
-  Where $\kappa\left(\params, \Indepvar\right)$ is the normalizing constant and equals $\sum_{\graph'\in\GRAPH}\exp{\transpose{\params}\sufstats{\graph', \Indepvar}}$. \pause
-  
-- The set of sufficient statistics reflects social and psychological mechanisms that are hypothesized to drive the network structure. Figure \autoref{fig:ergm-structs} shows some examples of values in $\sufstats{}$.\pause
-  
-- In the case of directed networks, $\GRAPH$ has $2^{n(n-1)}$ terms.\pause
+<!-- - The model is centered around a vector of \textbf{sufficient statistics} $\sufstats{}$, and is operationalized as: -->
 
-- See Wasserman, Pattison, Robins, Snijders, Handcock, Butts, and others.
+\begin{figure}
+\centering
+  \includegraphics[width = .8\linewidth]{fig/parts-of-ergm.pdf}
+\end{figure}
 
+
+------
+
+\centering
+
+There is one problem with this model ...
+
+\includegraphics[width = .5\linewidth]{fig/parts-of-ergm.pdf}\pause
+
+\large because of \color[HTML]{af0000}$\GRAPH$\color{black},
+ the \color[HTML]{5726e7} \textbf{normalizing constant}\color{black}{} is \linebreak[4] a summation of $2^{n(n-1)}$ terms \includegraphics[width=.05\linewidth]{fig/scared.png}!\normalsize\pause
+
+-----
+
+To solve this, instead of directly computing this function, estimation is done by approximating ratios of likelihood functions instead (TL;DR we use simulations).
+
+\begin{figure}
+\includegraphics[width=.6\linewidth]{fig/simply-not.jpg}
+\end{figure}
+
+  <!-- \begin{equation} -->
+  <!-- 	\Prcond{\Graph = \graph}{\params, \Indepvar} = \frac{% -->
+  <!-- 		\exp{\transpose{\params}\sufstats{\graph, \Indepvar}}%	 -->
+  <!-- 	}{ -->
+  <!-- 		\sum_{\graph'\in\GRAPH}\exp{\transpose{\params}\sufstats{\graph', \Indepvar}} -->
+  <!-- 	},\quad\forall \graph\in\GRAPH\label{eq:ergm} -->
+  <!-- \end{equation} -->
+  
+  <!-- Where $\kappa\left(\params, \Indepvar\right)$ is the normalizing constant and equals $\sum_{\graph'\in\GRAPH}\exp{\transpose{\params}\sufstats{\graph', \Indepvar}}$. \pause -->
+  
+<!-- - The set of sufficient statistics reflects social and psychological mechanisms that are hypothesized to drive the network structure. Figure \autoref{fig:ergm-structs} shows some examples of values in $\sufstats{}$.\pause -->
+
+<!-- - In the case of directed networks, $\GRAPH$ has $2^{n(n-1)}$ terms.\pause -->
+
+<!-- - See Wasserman, Pattison, Robins, Snijders, Handcock, Butts, and others. -->
+
+
+## Let's get going
+
+We will use the famous Monk data from @sampson1969novitiate
+
+```{r ergm-monks, message=FALSE}
+library(ergm)
+data(samplk, package="ergm")
+
+# A glimpse into a network object (from the network package loaded with ergm)
+samplk1
+```
+
+---
+
+```{r ermg-vis, warning=FALSE, message=FALSE, out.width=".5\\linewidth"}
+library(sna) # Tools for SNA
+set.seed(1)  # Graph layout is usually random-driven
+gplot(samplk1)
+```
+
+\pause Let's add some color and other features
+
+---
+
+```{r ergm-vis-cont, out.width=".5\\linewidth"}
+set.seed(1)
+cols <- viridisLite::magma(4)[as.factor((samplk1 %v% "group"))]
+gplot(samplk1, vertex.cex = degree(samplk1)/4, vertex.col = cols, edge.col = "gray")
+```
+
+
+## A simple ergm model
+
+```{r ergm-mcmc1, message=TRUE, warning=FALSE}
+# Estimating the model
+ans <- ergm(
+  samplk1 ~ edges + nodematch("group") + ttriad,
+  control = control.ergm(seed = 112)
+  )
+
+```
+
+----
+
+```{r ergm1-summary}
+summary(ans)
+```
+
+The common way to continue is: adding/removing terms, checking convergence, and checking goodness-of-fit.
+
+----
+
+Now its time for small networks!
+
+## `ergmito` example
+
+```{r loading-fivenets, cache=TRUE}
+library(ergmito)
+data(fivenets, package = "ergmito")
+```
+
+```{r plotfivenets, warning=FALSE, message=FALSE, echo=FALSE, fig.width=6, fig.height=3, out.width='.5\\linewidth', fig.align='center', cache=TRUE}
+library(sna)
+library(network)
+op <- par(mfrow = c(2, 3), mai=rep(0, 4), oma = rep(0, 4))
+USCCARDINAL <- rgb(153, 0, 0, maxColorValue = 255)
+ans <- lapply(fivenets, function(f) {
+  gplot(
+    f,
+    vertex.cex = 2,
+    vertex.col = c("white", USCCARDINAL)[
+      get.vertex.attribute(f, "female") + 1
+    ]
+    )
+  })
+plot.new()
+plot.window(xlim = c(0, 1), ylim = c(0, 1))
+legend("center", fill = c("white", USCCARDINAL), legend = c("Male", "Female"), cex=1, bty="n")
+par(op)
+```
+
+----
+
+```{r fivenets-1, cache=TRUE}
+# Looking at one of the five networks
+fivenets[[1]]
+```
+
+\pause How can we fit an ERGMito to this 5 networks?
+
+## `ergmito` example (cont'd)
+
+The same as you would do with the `ergm` package:
+
+```{r fit-fivenets, cache=TRUE}
+(model1 <- ergmito(fivenets ~ edges + nodematch("female")))
+```
+
+```{r fit-fivenets-print, results='asis', echo=FALSE, cache=TRUE}
+texreg::texreg(model1)
+# cat(gsub("#", "\\#", unclass(out), fixed=TRUE))
+```
+
+---
+
+
+```{r gof-fivenets, cache=TRUE}
+(gof1 <- gof_ergmito(model1))
+```
+
+
+---
+
+```{r gof-fivenets-print, cache=TRUE, out.width=".7\\linewidth", fig.align='center', width=8, height=6}
+plot(gof1)
+```
+
+
+
+## Thanks!
+
+\begin{centering}
+\includegraphics[width = .1\linewidth]{usc.pdf}
+
+\large \textbf{\textcolor{USCCardinal}{George G. Vega Yon}}
+
+\normalsize Let's chat! 
+
+\href{mailto:vegayon@usc.edu}{vegayon@usc.edu} 
+
+\href{https://ggvy.cl}{https://ggvy.cl} 
+
+\includegraphics[width=.02\linewidth]{github.png}\href{https://github.com/gvegayon}{@gvegayon}
+
+\includegraphics[width=.02\linewidth]{twitter.png}\href{https://twitter.com/gvegayon}{@gvegayon}
+
+\end{centering}
+
+
+---
+
+\appendix
 
 ## Structures
 
@@ -114,5 +299,4 @@ You got yourself an ERGM!
 \caption{\label{fig:ergm-structs}Besides of the common edge count statistic (number of ties in a graph), ERGMs allow measuring other more complex structures that can be captured as sufficient statistics. }
 \end{figure}
 
-
-## References 
+## References {.allowframebreaks}

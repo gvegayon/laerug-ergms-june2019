@@ -1,7 +1,7 @@
 \PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[10pt,ignorenonframetext,aspectratio=169,]{beamer}
+\documentclass[10pt,ignorenonframetext,handout,aspectratio=169,]{beamer}
 \usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
@@ -72,15 +72,46 @@
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \newif\ifbibliography
-\usepackage{graphicx,grffile}
-\makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -108,14 +139,14 @@
 % Objects
 \newcommand{\params}{\theta}
 \newcommand{\Params}{\Theta}
-\newcommand{\Graph}{\mathbf{G}}
-\newcommand{\graph}{\mathbf{g}}
-\newcommand{\GRAPH}{\mathcal{G}}
+\newcommand{\Graph}{\mathbf{Y}}
+\newcommand{\graph}{\mathbf{y}}
+\newcommand{\GRAPH}{\mathcal{Y}}
 \newcommand{\Adjmat}{\mathbf{A}}
 \newcommand{\adjmat}{\mathbf{a}}
-\newcommand{\DEPVAR}{\mathcal{Y}}
-\newcommand{\Depvar}{Y}
-\newcommand{\depvar}{y}
+\newcommand{\DEPVAR}{\mathcal{Z}}
+\newcommand{\Depvar}{Z}
+\newcommand{\depvar}{z}
 
 \newcommand{\INDEPVAR}{\mathcal{X}}
 \newcommand{\Indepvar}{\mathbf{X}}
@@ -146,9 +177,10 @@
 \definecolor{USCGold}{HTML}{FFCC00}
 \definecolor{USCGray}{HTML}{CCCCCC}
 
-% To use the function \sout
-\usepackage{ulem}
+
+\usepackage{ulem} % To use the function \sout
 \usepackage{tabularx, booktabs}
+\usepackage{tcolorbox} % Fancy looking boxes
 
 % \bibliography{bibliography.bib}
 
@@ -175,6 +207,20 @@ Preventive Medicine}
 
 \end{frame}
 
+\begin{frame}{What drives \sout{\color{USCCardinal}social} networks?}
+\protect\hypertarget{what-drives-networks}{}
+
+If \color{gray}\textit{[blank]}\color{black}{} asks you to predict a
+network\pause
+
+\Huge What kind of model?\pause
+
+\Huge What features would you include?\pause
+
+\normalsize
+
+\end{frame}
+
 \begin{frame}{Exponential Family Random Graph Models (ERGMs)}
 \protect\hypertarget{exponential-family-random-graph-models-ergms}{}
 
@@ -183,7 +229,9 @@ Why are you and I are \color{gray}\textit{[blank]} \color{black}?
 
 \footnotesize
 
-\includegraphics{fig/friendly-terms.pdf} \normalsize
+\begin{center}\includegraphics[width=.6\linewidth]{fig/friendly-terms} \end{center}
+
+\normalsize
 
 \pause Let's build a model for this!
 
@@ -192,33 +240,33 @@ Why are you and I are \color{gray}\textit{[blank]} \color{black}?
 \begin{frame}{ERGMs from scratch}
 \protect\hypertarget{ergms-from-scratch}{}
 
-We need to build a probability function\ldots{}\pause
+We need to build a probability function for
+\includegraphics[width=.05\linewidth]{fig/g1.pdf}\ldots{}\pause
 
-\begin{itemize}
-\item
-  First, we will focus on counts: ``How many edges?'', ``How many
-  homophilic ties?''. We will call them ``sufficient statistics''
+\begin{centering}
 
-  \(\# edges, \#homophilic\;ties, \dots\) \pause
-\item
-  As we do in \sout{life} statistics, let's assume it is an additive
-  model (we add stuff up), in a weighted fashion (i.e.~we have model
-  parameters!)
+\def\tbw{.6\linewidth}
 
-  \(\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots\)
-  \pause
-\item
-  And since we like things to be positive\ldots{} we just exponentiate
-  it!
-
-  \(\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}\)
-  \pause
-\item
-  Finally, as probabilities should add up to 1, we will divide the thing
-  by the sum of all possible cases (the ``normalizing constant'')
-
-  \(\frac{\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}}{\sum \exp{\dots}}\)\pause
-\end{itemize}
+\note{First, we will focus on counts: "How many edges?", "How many homophilic ties?".
+  We will call them "sufficient statistics"}
+  \note{As we do in \sout{life} statistics, let's assume it is an additive model (we add stuff up), in a weighted fashion (i.e. we have model parameters!)}
+\note{And since we like things to be positive... we just exponentiate it!}
+\note{Finally, as probabilities should add up to 1, we will divide the thing by the sum of all possible cases (the "normalizing constant")}
+  
+  \begin{tcolorbox}[width=\tbw]
+  $\# edges, \#homophilic\;ties, \dots$
+  \end{tcolorbox}\pause
+  \begin{tcolorbox}[width=\tbw]
+  $\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots$
+  \end{tcolorbox}\pause
+  \begin{tcolorbox}[width=\tbw]
+  $\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}$
+  \end{tcolorbox}\pause
+  \begin{tcolorbox}[width=\tbw]
+  $\frac{\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}}{\sum \exp{\dots}}$
+  \end{tcolorbox}\pause
+  
+\end{centering}
 
 You got yourself an ERGM!
 
@@ -227,39 +275,434 @@ You got yourself an ERGM!
 \begin{frame}{ERGMs\ldots{} the \textit{lingua franca} of SNA}
 \protect\hypertarget{ergms-the-of-sna}{}
 
-\begin{itemize}
-\item
-  Seeks to answer the question:
-  \emph{What local social structures gave origin to a given observed graph?}\pause
-\item
-  The model is centered around a vector of
-  \textbf{sufficient statistics} \(\sufstats{}\), and is operationalized
-  as:
+\begin{figure}
+\centering
+  \includegraphics[width = .8\linewidth]{fig/parts-of-ergm.pdf}
+\end{figure}
 
-  \begin{equation}
-    \Prcond{\Graph = \graph}{\params, \Indepvar} = \frac{%
-        \exp{\transpose{\params}\sufstats{\graph, \Indepvar}}%  
-    }{
-        \kappa\left(\params, \Indepvar\right)
-    },\quad\forall \graph\in\GRAPH\label{eq:ergm}
-  \end{equation}
+\end{frame}
 
-  Where \(\kappa\left(\params, \Indepvar\right)\) is the normalizing
-  constant and equals
-  \(\sum_{\graph'\in\GRAPH}\exp{\transpose{\params}\sufstats{\graph', \Indepvar}}\).
-  \pause
-\item
-  The set of sufficient statistics reflects social and psychological
-  mechanisms that are hypothesized to drive the network structure.
-  Figure \autoref{fig:ergm-structs} shows some examples of values in
-  \(\sufstats{}\).\pause
-\item
-  In the case of directed networks, \(\GRAPH\) has \(2^{n(n-1)}\)
-  terms.\pause
-\item
-  See Wasserman, Pattison, Robins, Snijders, Handcock, Butts, and
-  others.
-\end{itemize}
+\begin{frame}
+
+\centering
+
+There is one problem with this model \ldots{}
+
+\includegraphics[width = .5\linewidth]{fig/parts-of-ergm.pdf}\pause
+
+\large because of \color[HTML]{af0000}\(\GRAPH\)\color{black}, the
+\color[HTML]{5726e7} \textbf{normalizing constant}\color{black}{} is
+\linebreak[4] a summation of \(2^{n(n-1)}\) terms
+\includegraphics[width=.05\linewidth]{fig/scared.png}!\normalsize\pause
+
+\end{frame}
+
+\begin{frame}
+
+To solve this, instead of directly computing this function, estimation
+is done by approximating ratios of likelihood functions instead (TL;DR
+we use simulations).
+
+\begin{figure}
+\includegraphics[width=.6\linewidth]{fig/simply-not.jpg}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}[fragile]{Let's get going}
+\protect\hypertarget{lets-get-going}{}
+
+We will use the famous Monk data from Sampson (1969)
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ergm)}
+\KeywordTok{data}\NormalTok{(samplk, }\DataTypeTok{package=}\StringTok{"ergm"}\NormalTok{)}
+
+\CommentTok{# A glimpse into a network object (from the network package loaded with ergm)}
+\NormalTok{samplk1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  Network attributes:
+##   vertices = 18 
+##   directed = TRUE 
+##   hyper = FALSE 
+##   loops = FALSE 
+##   multiple = FALSE 
+##   bipartite = FALSE 
+##   total edges= 55 
+##     missing edges= 0 
+##     non-missing edges= 55 
+## 
+##  Vertex attribute names: 
+##     cloisterville group vertex.names 
+## 
+## No edge attributes
+\end{verbatim}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(sna) }\CommentTok{# Tools for SNA}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)  }\CommentTok{# Graph layout is usually random-driven}
+\KeywordTok{gplot}\NormalTok{(samplk1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=.5\linewidth]{slides_files/figure-beamer/ermg-vis-1} \end{center}
+
+\normalsize
+
+\pause Let's add some color and other features
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{cols <-}\StringTok{ }\NormalTok{viridisLite}\OperatorTok{::}\KeywordTok{magma}\NormalTok{(}\DecValTok{4}\NormalTok{)[}\KeywordTok{as.factor}\NormalTok{((samplk1 }\OperatorTok{%v%}\StringTok{ "group"}\NormalTok{))]}
+\KeywordTok{gplot}\NormalTok{(samplk1, }\DataTypeTok{vertex.cex =} \KeywordTok{degree}\NormalTok{(samplk1)}\OperatorTok{/}\DecValTok{4}\NormalTok{, }\DataTypeTok{vertex.col =}\NormalTok{ cols, }\DataTypeTok{edge.col =} \StringTok{"gray"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=.5\linewidth]{slides_files/figure-beamer/ergm-vis-cont-1} \end{center}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]{A simple ergm model}
+\protect\hypertarget{a-simple-ergm-model}{}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Estimating the model}
+\NormalTok{ans <-}\StringTok{ }\KeywordTok{ergm}\NormalTok{(}
+\NormalTok{  samplk1 }\OperatorTok{~}\StringTok{ }\NormalTok{edges }\OperatorTok{+}\StringTok{ }\KeywordTok{nodematch}\NormalTok{(}\StringTok{"group"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{ttriad,}
+  \DataTypeTok{control =} \KeywordTok{control.ergm}\NormalTok{(}\DataTypeTok{seed =} \DecValTok{112}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Starting maximum pseudolikelihood estimation (MPLE):
+\end{verbatim}
+
+\begin{verbatim}
+## Evaluating the predictor and response matrix.
+\end{verbatim}
+
+\begin{verbatim}
+## Maximizing the pseudolikelihood.
+\end{verbatim}
+
+\begin{verbatim}
+## Finished MPLE.
+\end{verbatim}
+
+\begin{verbatim}
+## Starting Monte Carlo maximum likelihood estimation (MCMLE):
+\end{verbatim}
+
+\begin{verbatim}
+## Iteration 1 of at most 20:
+\end{verbatim}
+
+\begin{verbatim}
+## Optimizing with step length 1.
+\end{verbatim}
+
+\begin{verbatim}
+## The log-likelihood improved by 0.02337.
+\end{verbatim}
+
+\begin{verbatim}
+## Step length converged once. Increasing MCMC sample size.
+\end{verbatim}
+
+\begin{verbatim}
+## Iteration 2 of at most 20:
+\end{verbatim}
+
+\begin{verbatim}
+## Optimizing with step length 1.
+\end{verbatim}
+
+\begin{verbatim}
+## The log-likelihood improved by 0.002011.
+\end{verbatim}
+
+\begin{verbatim}
+## Step length converged twice. Stopping.
+\end{verbatim}
+
+\begin{verbatim}
+## Finished MCMLE.
+\end{verbatim}
+
+\begin{verbatim}
+## Evaluating log-likelihood at the estimate. Using 20 bridges: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 .
+## This model was fit using MCMC.  To examine model diagnostics and check for degeneracy, use the mcmc.diagnostics() function.
+\end{verbatim}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(ans)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ==========================
+## Summary of model fit
+## ==========================
+## 
+## Formula:   samplk1 ~ edges + nodematch("group") + ttriad
+## 
+## Iterations:  2 out of 20 
+## 
+## Monte Carlo MLE Results:
+##                 Estimate Std. Error MCMC % z value Pr(>|z|)    
+## edges            -1.7738     0.3049      0  -5.819   <1e-04 ***
+## nodematch.group   1.9730     0.3906      0   5.052   <1e-04 ***
+## ttriple          -0.2984     0.1954      0  -1.527    0.127    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+##      Null Deviance: 424.2  on 306  degrees of freedom
+##  Residual Deviance: 255.8  on 303  degrees of freedom
+##  
+## AIC: 261.8    BIC: 272.9    (Smaller is better.)
+\end{verbatim}
+
+\normalsize
+
+The common way to continue is: adding/removing terms, checking
+convergence, and checking goodness-of-fit.
+
+\end{frame}
+
+\begin{frame}
+
+Now its time for small networks!
+
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{ergmito} example}
+\protect\hypertarget{ergmito-example}{}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ergmito)}
+\KeywordTok{data}\NormalTok{(fivenets, }\DataTypeTok{package =} \StringTok{"ergmito"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+
+\footnotesize
+
+\begin{center}\includegraphics[width=.5\linewidth]{slides_files/figure-beamer/plotfivenets-1} \end{center}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Looking at one of the five networks}
+\NormalTok{fivenets[[}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  Network attributes:
+##   vertices = 4 
+##   directed = TRUE 
+##   hyper = FALSE 
+##   loops = FALSE 
+##   multiple = FALSE 
+##   bipartite = FALSE 
+##   total edges= 2 
+##     missing edges= 0 
+##     non-missing edges= 2 
+## 
+##  Vertex attribute names: 
+##     female name 
+## 
+## No edge attributes
+\end{verbatim}
+
+\normalsize
+
+\pause How can we fit an ERGMito to this 5 networks?
+
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{ergmito} example (cont'd)}
+\protect\hypertarget{ergmito-example-contd}{}
+
+The same as you would do with the \texttt{ergm} package:
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(model1 <-}\StringTok{ }\KeywordTok{ergmito}\NormalTok{(fivenets }\OperatorTok{~}\StringTok{ }\NormalTok{edges }\OperatorTok{+}\StringTok{ }\KeywordTok{nodematch}\NormalTok{(}\StringTok{"female"}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ERGMito estimates
+## 
+##  Coefficients:
+##            edges  nodematch.female  
+##           -1.705             1.587
+\end{verbatim}
+
+\normalsize
+
+\footnotesize
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l c }
+\hline
+ & Model 1 \\
+\hline
+edges            & $-1.70^{**}$ \\
+                 & $(0.54)$     \\
+nodematch.female & $1.59^{*}$   \\
+                 & $(0.64)$     \\
+\hline
+AIC              & 73.34        \\
+BIC              & 77.53        \\
+Log Likelihood   & -34.67       \\
+Num. networks    & 5            \\
+Convergence      & 0            \\
+\hline
+\multicolumn{2}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$}}
+\end{tabular}
+\caption{Statistical models}
+\label{table:coefficients}
+\end{center}
+\end{table}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(gof1 <-}\StringTok{ }\KeywordTok{gof_ergmito}\NormalTok{(model1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Goodness-of-fit for edges 
+## 
+##       obs min mean max lower upper lower prob. upper prob.
+## net 1   2   0  3.7  12     0     6      0.0081        0.96
+## net 2   7   0  3.7  12     0     6      0.0081        0.96
+## net 3   4   0  3.1  12     0     6      0.0206        0.99
+## net 4   5   0  5.6  12     2     8      0.0309        0.95
+## net 5   2   0  3.7  12     0     6      0.0081        0.96
+## 
+## 
+## Goodness-of-fit for nodematch.female 
+## 
+##       obs min mean max lower upper lower prob. upper prob.
+## net 1   2   0  2.8   6     0     5       0.022        0.99
+## net 2   5   0  2.8   6     0     5       0.022        0.99
+## net 3   3   0  1.9   4     0     3       0.079        0.95
+## net 4   5   0  5.6  12     2     8       0.031        0.95
+## net 5   1   0  2.8   6     0     5       0.022        0.99
+## 
+## Note: Exact confidence intervals where used. This implies that the requestes CI may differ from the one used (see ?gof_ergmito).
+\end{verbatim}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(gof1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=.7\linewidth]{slides_files/figure-beamer/gof-fivenets-print-1} \end{center}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}{Thanks!}
+\protect\hypertarget{thanks}{}
+
+\begin{centering}
+\includegraphics[width = .1\linewidth]{usc.pdf}
+
+\large \textbf{\textcolor{USCCardinal}{George G. Vega Yon}}
+
+\normalsize Let's chat! 
+
+\href{mailto:vegayon@usc.edu}{vegayon@usc.edu} 
+
+\href{https://ggvy.cl}{https://ggvy.cl} 
+
+\includegraphics[width=.02\linewidth]{github.png}\href{https://github.com/gvegayon}{@gvegayon}
+
+\includegraphics[width=.02\linewidth]{twitter.png}\href{https://twitter.com/gvegayon}{@gvegayon}
+
+\end{centering}
+
+\end{frame}
+
+\begin{frame}
+
+\appendix
 
 \end{frame}
 
@@ -283,7 +726,7 @@ You got yourself an ERGM!
 
 \end{frame}
 
-\begin{frame}{References}
+\begin{frame}[allowframebreaks]{References}
 \protect\hypertarget{references}{}
 
 \hypertarget{refs}{}
@@ -308,6 +751,10 @@ models for social networks.'' \emph{Social Networks} 29 (2): 192--215.
 R Core Team. 2018. \emph{R: A Language and Environment for Statistical
 Computing}. Vienna, Austria: R Foundation for Statistical Computing.
 \url{https://www.R-project.org/}.
+
+\leavevmode\hypertarget{ref-sampson1969novitiate}{}%
+Sampson, Samuel F. 1969. ``A Novitiate in a Period of Change: An
+Experimental and Case Study of Social Relationships.''
 
 \leavevmode\hypertarget{ref-Wasserman1996}{}%
 Wasserman, Stanley, and Philippa Pattison. 1996. ``Logit models and
