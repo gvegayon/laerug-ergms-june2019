@@ -1,7 +1,7 @@
 \PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
 \PassOptionsToPackage{hyphens}{url}
 %
-\documentclass[10pt,ignorenonframetext,handout,aspectratio=169,]{beamer}
+\documentclass[10pt,ignorenonframetext,aspectratio=169,]{beamer}
 \usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
@@ -210,22 +210,8 @@ Preventive Medicine}
 \begin{frame}{What drives \sout{\color{USCCardinal}social} networks?}
 \protect\hypertarget{what-drives-networks}{}
 
-If \color{gray}\textit{[blank]}\color{black}{} asks you to predict a
-network\pause
-
-\Huge What kind of model?\pause
-
-\Huge What features would you include?\pause
-
-\normalsize
-
-\end{frame}
-
-\begin{frame}{Exponential Family Random Graph Models (ERGMs)}
-\protect\hypertarget{exponential-family-random-graph-models-ergms}{}
-
 Why are you and I are \color{gray}\textit{[blank]} \color{black}?
-(friends, collaborators, etc.)
+(friends, collaborators, etc.)\pause
 
 \footnotesize
 
@@ -237,8 +223,8 @@ Why are you and I are \color{gray}\textit{[blank]} \color{black}?
 
 \end{frame}
 
-\begin{frame}{ERGMs from scratch}
-\protect\hypertarget{ergms-from-scratch}{}
+\begin{frame}{Exponential Family Random Graph Models (ERGMs)}
+\protect\hypertarget{exponential-family-random-graph-models-ergms}{}
 
 We need to build a probability function for
 \includegraphics[width=.05\linewidth]{fig/g1.pdf}\ldots{}\pause
@@ -264,7 +250,7 @@ We need to build a probability function for
   \end{tcolorbox}\pause
   \begin{tcolorbox}[width=\tbw]
   $\frac{\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}}{\sum \exp{\dots}}$
-  \end{tcolorbox}\pause
+  \end{tcolorbox}
   
 \end{centering}
 
@@ -286,14 +272,14 @@ You got yourself an ERGM!
 
 \centering
 
-There is one problem with this model \ldots{}
+There is one problem with this model \ldots{} \linebreak[4]
 
-\includegraphics[width = .5\linewidth]{fig/parts-of-ergm.pdf}\pause
+\includegraphics[width = .5\linewidth]{fig/parts-of-ergm.pdf}\pause \linebreak[4]
 
 \large because of \color[HTML]{af0000}\(\GRAPH\)\color{black}, the
 \color[HTML]{5726e7} \textbf{normalizing constant}\color{black}{} is
 \linebreak[4] a summation of \(2^{n(n-1)}\) terms
-\includegraphics[width=.05\linewidth]{fig/scared.png}!\normalsize\pause
+\includegraphics[width=.05\linewidth]{fig/scared.png}!\normalsize
 
 \end{frame}
 
@@ -312,7 +298,7 @@ we use simulations).
 \begin{frame}[fragile]{Let's get going}
 \protect\hypertarget{lets-get-going}{}
 
-We will use the famous Monk data from Sampson (1969)
+We will use the famous Monk data from Sampson (1969) \pause
 
 \footnotesize
 
@@ -320,8 +306,18 @@ We will use the famous Monk data from Sampson (1969)
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(ergm)}
 \KeywordTok{data}\NormalTok{(samplk, }\DataTypeTok{package=}\StringTok{"ergm"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
-\CommentTok{# A glimpse into a network object (from the network package loaded with ergm)}
+\normalsize
+\pause
+
+This is an object of class network
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{samplk1}
 \end{Highlighting}
 \end{Shaded}
@@ -389,11 +385,39 @@ We will use the famous Monk data from Sampson (1969)
 \begin{frame}[fragile]{A simple ergm model}
 \protect\hypertarget{a-simple-ergm-model}{}
 
-\footnotesize
+\begin{itemize}
+\item
+  Suppose we want to test wether homophily on \textit{group}
+  (individuals of the same group tend to connect with each other) and
+  transitive triads (the friend of my friend) are driving the structure:
+  \pause
+
+  \footnotesize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Estimating the model}
+\KeywordTok{summary}\NormalTok{(samplk1 }\OperatorTok{~}\StringTok{ }\NormalTok{edges }\OperatorTok{+}\StringTok{ }\KeywordTok{nodematch}\NormalTok{(}\StringTok{"group"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{ttriad)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           edges nodematch.group         ttriple 
+##              55              30              24
+\end{verbatim}
+
+  \normalsize
+\end{itemize}
+
+\pause
+
+\begin{itemize}
+\item
+  To estimate this model we do:
+
+  \footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{ans <-}\StringTok{ }\KeywordTok{ergm}\NormalTok{(}
 \NormalTok{  samplk1 }\OperatorTok{~}\StringTok{ }\NormalTok{edges }\OperatorTok{+}\StringTok{ }\KeywordTok{nodematch}\NormalTok{(}\StringTok{"group"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{ttriad,}
   \DataTypeTok{control =} \KeywordTok{control.ergm}\NormalTok{(}\DataTypeTok{seed =} \DecValTok{112}\NormalTok{)}
@@ -401,68 +425,8 @@ We will use the famous Monk data from Sampson (1969)
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-## Starting maximum pseudolikelihood estimation (MPLE):
-\end{verbatim}
-
-\begin{verbatim}
-## Evaluating the predictor and response matrix.
-\end{verbatim}
-
-\begin{verbatim}
-## Maximizing the pseudolikelihood.
-\end{verbatim}
-
-\begin{verbatim}
-## Finished MPLE.
-\end{verbatim}
-
-\begin{verbatim}
-## Starting Monte Carlo maximum likelihood estimation (MCMLE):
-\end{verbatim}
-
-\begin{verbatim}
-## Iteration 1 of at most 20:
-\end{verbatim}
-
-\begin{verbatim}
-## Optimizing with step length 1.
-\end{verbatim}
-
-\begin{verbatim}
-## The log-likelihood improved by 0.02337.
-\end{verbatim}
-
-\begin{verbatim}
-## Step length converged once. Increasing MCMC sample size.
-\end{verbatim}
-
-\begin{verbatim}
-## Iteration 2 of at most 20:
-\end{verbatim}
-
-\begin{verbatim}
-## Optimizing with step length 1.
-\end{verbatim}
-
-\begin{verbatim}
-## The log-likelihood improved by 0.002011.
-\end{verbatim}
-
-\begin{verbatim}
-## Step length converged twice. Stopping.
-\end{verbatim}
-
-\begin{verbatim}
-## Finished MCMLE.
-\end{verbatim}
-
-\begin{verbatim}
-## Evaluating log-likelihood at the estimate. Using 20 bridges: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 .
-## This model was fit using MCMC.  To examine model diagnostics and check for degeneracy, use the mcmc.diagnostics() function.
-\end{verbatim}
-
-\normalsize
+  \normalsize
+\end{itemize}
 
 \end{frame}
 
@@ -502,14 +466,65 @@ We will use the famous Monk data from Sampson (1969)
 
 \normalsize
 
-The common way to continue is: adding/removing terms, checking
-convergence, and checking goodness-of-fit.
+\end{frame}
+
+\begin{frame}
+
+Now its time for \LARGE small \Huge networks!\normalsize 
 
 \end{frame}
 
 \begin{frame}
 
-Now its time for small networks!
+\begin{figure}
+\includegraphics[height = \textheight]{fig/american-chopper-argument-ergmitos.png}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{ERGMs for Small Networks}
+\protect\hypertarget{ergms-for-small-networks}{}
+
+\begin{itemize}
+\item
+  In the case of small networks (e.g.~at most 6 nodes), the calculation
+  of \color[HTML]{5726e7} \textbf{normalizing constant}\color{black}{}
+  becomes computationally feasible.\pause
+\item
+  This allows direct calculation of the likelihood,
+  \textbf{avoiding the need for simulations} and allowing us to obtain
+  Maximum Likelihood Estimates using \textit{standard} optimization
+  techniques.\pause
+\item
+  In addition, most of the time samples of small networks include
+  multiple of them, e.g.: Families, Small teams (like our data),
+  Ego-nets, etc.\pause
+\item
+  This makes pooled ERGM estimates a natural way of modeling the
+  data.\pause
+\item
+  This and more can be found in the
+  \href{https://github.com/muriteams/ergmito}{\textbf{ergmito}} R
+  package
+  \href{https://github.com/muriteams/ergmito}{(\includegraphics[width=.025\linewidth]{fig/github.png}/muriteams/ergmito)}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+Sidetrack\ldots{}
+
+\begin{minipage}[c]{1\linewidth}
+\large \textbf{ito, ita}: From the latin -\textit{\=ittus}. suffix in Spanish used to denote small or affection. e.g.:
+
+\hspace{.5cm} \textit{¡Qué lindo ese perr\textcolor{USCCardinal}{\textbf{ito}}!} / \textit{What a beautiful little dog!}
+
+\hspace{.5cm} \textit{¿Me darías una tac\textcolor{USCCardinal}{\textbf{ita}} de azúcar?} / \textit{Would you give me a small cup of sugar?}
+\normalsize
+\end{minipage}\pause
+
+\alert{Special thanks to George Barnett who proposed the name during the 2018 NASN!}
 
 \end{frame}
 
@@ -573,13 +588,14 @@ Now its time for small networks!
 \begin{frame}[fragile]{\texttt{ergmito} example (cont'd)}
 \protect\hypertarget{ergmito-example-contd}{}
 
-The same as you would do with the \texttt{ergm} package:
+The same as you would do with the \texttt{ergm} package:\linebreak[4]
 
 \footnotesize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(model1 <-}\StringTok{ }\KeywordTok{ergmito}\NormalTok{(fivenets }\OperatorTok{~}\StringTok{ }\NormalTok{edges }\OperatorTok{+}\StringTok{ }\KeywordTok{nodematch}\NormalTok{(}\StringTok{"female"}\NormalTok{)))}
+\NormalTok{model1 <-}\StringTok{ }\KeywordTok{ergmito}\NormalTok{(fivenets }\OperatorTok{~}\StringTok{ }\NormalTok{edges }\OperatorTok{+}\StringTok{ }\KeywordTok{nodematch}\NormalTok{(}\StringTok{"female"}\NormalTok{))}
+\KeywordTok{summary}\NormalTok{(model1)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -587,94 +603,48 @@ The same as you would do with the \texttt{ergm} package:
 ## 
 ## ERGMito estimates
 ## 
-##  Coefficients:
-##            edges  nodematch.female  
-##           -1.705             1.587
-\end{verbatim}
-
-\normalsize
-
-\footnotesize
-
-\begin{table}
-\begin{center}
-\begin{tabular}{l c }
-\hline
- & Model 1 \\
-\hline
-edges            & $-1.70^{**}$ \\
-                 & $(0.54)$     \\
-nodematch.female & $1.59^{*}$   \\
-                 & $(0.64)$     \\
-\hline
-AIC              & 73.34        \\
-BIC              & 77.53        \\
-Log Likelihood   & -34.67       \\
-Num. networks    & 5            \\
-Convergence      & 0            \\
-\hline
-\multicolumn{2}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$}}
-\end{tabular}
-\caption{Statistical models}
-\label{table:coefficients}
-\end{center}
-\end{table}
-
-\normalsize
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\footnotesize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{(gof1 <-}\StringTok{ }\KeywordTok{gof_ergmito}\NormalTok{(model1))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
+## formula:  fivenets ~ edges + nodematch("female") 
 ## 
-## Goodness-of-fit for edges 
-## 
-##       obs min mean max lower upper lower prob. upper prob.
-## net 1   2   0  3.7  12     0     6      0.0081        0.96
-## net 2   7   0  3.7  12     0     6      0.0081        0.96
-## net 3   4   0  3.1  12     0     6      0.0206        0.99
-## net 4   5   0  5.6  12     2     8      0.0309        0.95
-## net 5   2   0  3.7  12     0     6      0.0081        0.96
-## 
-## 
-## Goodness-of-fit for nodematch.female 
-## 
-##       obs min mean max lower upper lower prob. upper prob.
-## net 1   2   0  2.8   6     0     5       0.022        0.99
-## net 2   5   0  2.8   6     0     5       0.022        0.99
-## net 3   3   0  1.9   4     0     3       0.079        0.95
-## net 4   5   0  5.6  12     2     8       0.031        0.95
-## net 5   1   0  2.8   6     0     5       0.022        0.99
-## 
-## Note: Exact confidence intervals where used. This implies that the requestes CI may differ from the one used (see ?gof_ergmito).
+##                   Estimate Std. Error   z value    Pr(>|z|)
+## edges            -1.704748  0.5435573 -3.136280 0.001711055
+## nodematch.female  1.586965  0.6430475  2.467882 0.013591530
 \end{verbatim}
 
 \normalsize
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
-\footnotesize
+Some features of this
+(\includegraphics[width=.1\linewidth]{lifecycle-experimental-orange.pdf})
+R package
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(gof1)}
-\end{Highlighting}
-\end{Shaded}
+\begincols
 
-\begin{center}\includegraphics[width=.7\linewidth]{slides_files/figure-beamer/gof-fivenets-print-1} \end{center}
+\begincol{.65\linewidth}
+\begin{itemize}
+  \setlength\itemsep{.5cm}
+\item<2-> Built on top of \href{https://statnet.org}{\textbf{statnet}}'s \href{https://github.com/statnet/ergm}{\texttt{ergm}} R package.
 
-\normalsize
+\item<3-> Allows estimating ERGMs for small networks (less than 7 and perhaps 6) via MLE.
+
+\item<4-> Implements pooled ERGM models.
+
+\item<5-> Includes a simulation function for efficiently drawing samples of small networks, and by \textbf{efficiently} we mean \textbf{fast}.
+\end{itemize}
+
+\endcol
+
+\begincol{.3\linewidth}
+
+\includegraphics{fig/logo.png}
+
+\endcol
+
+\endcols
+
+\uncover<6->{And much more!}
 
 \end{frame}
 
@@ -682,19 +652,17 @@ Convergence      & 0            \\
 \protect\hypertarget{thanks}{}
 
 \begin{centering}
-\includegraphics[width = .1\linewidth]{usc.pdf}
+\includegraphics[width = .4\linewidth]{fig/the-end.jpg}
 
 \large \textbf{\textcolor{USCCardinal}{George G. Vega Yon}}
 
-\normalsize Let's chat! 
 
 \href{mailto:vegayon@usc.edu}{vegayon@usc.edu} 
 
 \href{https://ggvy.cl}{https://ggvy.cl} 
 
-\includegraphics[width=.02\linewidth]{github.png}\href{https://github.com/gvegayon}{@gvegayon}
-
-\includegraphics[width=.02\linewidth]{twitter.png}\href{https://twitter.com/gvegayon}{@gvegayon}
+\includegraphics[width=.02\linewidth]{github.png}\href{https://github.com/gvegayon}{gvegayon}
+\includegraphics[width=.02\linewidth]{twitter.png}\href{https://twitter.com/gvegayon}{gvegayon}
 
 \end{centering}
 
@@ -741,11 +709,24 @@ Csardi, Gabor. 2015. \emph{Igraphdata: A Collection of Network Data Sets
 for the 'Igraph' Package}.
 \url{https://CRAN.R-project.org/package=igraphdata}.
 
+\leavevmode\hypertarget{ref-Handcock2018}{}%
+Handcock, Mark S., David R. Hunter, Carter T. Butts, Steven M. Goodreau,
+Pavel N. Krivitsky, and Martina Morris. 2018. \emph{Ergm: Fit, Simulate
+and Diagnose Exponential-Family Models for Networks}. The Statnet
+Project (\url{http://www.statnet.org}).
+\url{https://CRAN.R-project.org/package=ergm}.
+
 \leavevmode\hypertarget{ref-Handcock2006}{}%
 Handcock, Mark, Peng Wang, Garry Robins, Tom Snijders, and Philippa
 Pattison. 2006. ``Recent developments in exponential random graph (p*)
 models for social networks.'' \emph{Social Networks} 29 (2): 192--215.
 \url{https://doi.org/10.1016/j.socnet.2006.08.003}.
+
+\leavevmode\hypertarget{ref-hunter2008}{}%
+Hunter, David R., Mark S. Handcock, Carter T. Butts, Steven M. Goodreau,
+and Martina Morris. 2008. ``Ergm: A Package to Fit, Simulate and
+Diagnose Exponential-Family Models for Networks.'' \emph{Journal of
+Statistical Software} 24 (3): 1--29.
 
 \leavevmode\hypertarget{ref-R}{}%
 R Core Team. 2018. \emph{R: A Language and Environment for Statistical
@@ -755,6 +736,14 @@ Computing}. Vienna, Austria: R Foundation for Statistical Computing.
 \leavevmode\hypertarget{ref-sampson1969novitiate}{}%
 Sampson, Samuel F. 1969. ``A Novitiate in a Period of Change: An
 Experimental and Case Study of Social Relationships.''
+
+\leavevmode\hypertarget{ref-vegayon2018}{}%
+Vega Yon, George. 2018. \emph{ergmito: Exponential Random Graph Models
+for Small Networks}. \url{https://github.com/muriteams/ergmito}.
+
+\leavevmode\hypertarget{ref-vegayon2019}{}%
+Vega Yon, George, and de la HayeKayla. n.d. ``Exponential Random Graph
+models for Little Networks.''
 
 \leavevmode\hypertarget{ref-Wasserman1996}{}%
 Wasserman, Stanley, and Philippa Pattison. 1996. ``Logit models and

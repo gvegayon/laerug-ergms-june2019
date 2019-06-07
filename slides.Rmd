@@ -15,9 +15,10 @@ output:
 fontsize: 10pt
 aspectratio: 169
 nocite: |
-  @Csardi2015, @knitr, @rmarkdown, @R, @Handcock2006, @Wasserman1996
+  @Csardi2015, @knitr, @rmarkdown, @R, @Handcock2006, @Wasserman1996, |
+  @hunter2008, @Handcock2018, @vegayon2018, @vegayon2019
 bibliography: bibliography.bib
-handout: true
+handout: false
 ---
 
 ```{r setup, include=FALSE}
@@ -40,19 +41,19 @@ knitr::opts_chunk$set(echo = TRUE, smallsize=TRUE, out.width = ".6\\linewidth",
 \caption{Friendship network of a UK university faculty. Source: \textbf{igraphdata} R package (Csardi, 2015). Figure drawn using the R package \textbf{netplot} (yours truly, https://github.com/usccana/netplot)}
 \end{figure}
 
+<!-- ## What drives \sout{\color{USCCardinal}social} networks? -->
+
+<!-- If \color{gray}\textit{[blank]}\color{black}{} asks you to predict a network\pause -->
+
+<!-- \Huge What kind of model?\pause -->
+
+<!-- \Huge What features would you include?\pause -->
+
+<!-- \normalsize -->
+
 ## What drives \sout{\color{USCCardinal}social} networks?
 
-If \color{gray}\textit{[blank]}\color{black}{} asks you to predict a network\pause
-
-\Huge What kind of model?\pause
-
-\Huge What features would you include?\pause
-
-\normalsize
-
-## Exponential Family Random Graph Models (ERGMs) 
-
-Why are you and I are \color{gray}\textit{[blank]} \color{black}? (friends, collaborators, etc.)
+Why are you and I are \color{gray}\textit{[blank]} \color{black}? (friends, collaborators, etc.)\pause
 
 ```{r ergm-terms, echo=FALSE}
 knitr::include_graphics("fig/friendly-terms.pdf")
@@ -60,7 +61,7 @@ knitr::include_graphics("fig/friendly-terms.pdf")
 
 \pause Let's build a model for this!
 
-## ERGMs from scratch
+## Exponential Family Random Graph Models (ERGMs) 
 
 We need to build a probability function for \includegraphics[width=.05\linewidth]{fig/g1.pdf}...\pause
 
@@ -85,7 +86,7 @@ We need to build a probability function for \includegraphics[width=.05\linewidth
   \end{tcolorbox}\pause
   \begin{tcolorbox}[width=\tbw]
   $\frac{\exp{\theta_{1} \times \#edges + \theta_{2} \times \#homophilic\;ties + \dots}}{\sum \exp{\dots}}$
-  \end{tcolorbox}\pause
+  \end{tcolorbox}
   
 \end{centering}
 
@@ -107,12 +108,12 @@ You got yourself an ERGM!
 
 \centering
 
-There is one problem with this model ...
+There is one problem with this model ... \linebreak[4]
 
-\includegraphics[width = .5\linewidth]{fig/parts-of-ergm.pdf}\pause
+\includegraphics[width = .5\linewidth]{fig/parts-of-ergm.pdf}\pause \linebreak[4]
 
 \large because of \color[HTML]{af0000}$\GRAPH$\color{black},
- the \color[HTML]{5726e7} \textbf{normalizing constant}\color{black}{} is \linebreak[4] a summation of $2^{n(n-1)}$ terms \includegraphics[width=.05\linewidth]{fig/scared.png}!\normalsize\pause
+ the \color[HTML]{5726e7} \textbf{normalizing constant}\color{black}{} is \linebreak[4] a summation of $2^{n(n-1)}$ terms \includegraphics[width=.05\linewidth]{fig/scared.png}!\normalsize
 
 -----
 
@@ -141,15 +142,19 @@ To solve this, instead of directly computing this function, estimation is done b
 
 ## Let's get going
 
-We will use the famous Monk data from @sampson1969novitiate
+We will use the famous Monk data from @sampson1969novitiate \pause
 
 ```{r ergm-monks, message=FALSE}
 library(ergm)
 data(samplk, package="ergm")
+```
+\pause
+This is an object of class network
 
-# A glimpse into a network object (from the network package loaded with ergm)
+```{r ergm-monk-print}
 samplk1
 ```
+
 
 ---
 
@@ -172,26 +177,66 @@ gplot(samplk1, vertex.cex = degree(samplk1)/4, vertex.col = cols, edge.col = "gr
 
 ## A simple ergm model
 
-```{r ergm-mcmc1, message=TRUE, warning=FALSE}
-# Estimating the model
-ans <- ergm(
-  samplk1 ~ edges + nodematch("group") + ttriad,
-  control = control.ergm(seed = 112)
-  )
+*   Suppose we want to test wether homophily on \textit{group} (individuals of the same group tend to connect with each other) and transitive triads (the friend of my friend) are driving the structure: \pause
 
-```
+    ```{r}
+    summary(samplk1 ~ edges + nodematch("group") + ttriad)
+    ```
+    
+\pause
+
+*   To estimate this model we do:
+    
+    ```{r ergm-mcmc1, message=FALSE, warning=FALSE, cache=TRUE}
+    ans <- ergm(
+      samplk1 ~ edges + nodematch("group") + ttriad,
+      control = control.ergm(seed = 112)
+      )
+    
+    ```
 
 ----
 
-```{r ergm1-summary}
+```{r ergm1-summary, echo=TRUE, cache=TRUE}
 summary(ans)
 ```
 
-The common way to continue is: adding/removing terms, checking convergence, and checking goodness-of-fit.
-
 ----
 
-Now its time for small networks!
+Now its time for \LARGE small \Huge networks!\normalsize 
+
+---
+
+\begin{figure}
+\includegraphics[height = \textheight]{fig/american-chopper-argument-ergmitos.png}
+\end{figure}
+
+## ERGMs for Small Networks
+			
+-   In the case of small networks (e.g. at most 6 nodes), the calculation of \color[HTML]{5726e7} \textbf{normalizing constant}\color{black}{} becomes computationally feasible.\pause
+
+-   This allows direct calculation of the likelihood, \textbf{avoiding the need for simulations} and allowing us to obtain Maximum Likelihood Estimates using \textit{standard} optimization techniques.\pause
+
+-   In addition, most of the time samples of small networks include multiple of them, e.g.: Families, Small teams (like our data), Ego-nets, etc.\pause
+
+-   This makes pooled ERGM estimates a natural way of modeling the data.\pause
+
+-   This and more can be found in the [\textbf{ergmito}](https://github.com/muriteams/ergmito) R package \href{https://github.com/muriteams/ergmito}{(\includegraphics[width=.025\linewidth]{fig/github.png}/muriteams/ergmito)}
+
+---
+
+Sidetrack...
+
+\begin{minipage}[c]{1\linewidth}
+\large \textbf{ito, ita}: From the latin -\textit{\=ittus}. suffix in Spanish used to denote small or affection. e.g.:
+
+\hspace{.5cm} \textit{¡Qué lindo ese perr\textcolor{USCCardinal}{\textbf{ito}}!} / \textit{What a beautiful little dog!}
+
+\hspace{.5cm} \textit{¿Me darías una tac\textcolor{USCCardinal}{\textbf{ita}} de azúcar?} / \textit{Would you give me a small cup of sugar?}
+\normalsize
+\end{minipage}\pause
+
+\alert{Special thanks to George Barnett who proposed the name during the 2018 NASN!}
 
 ## `ergmito` example
 
@@ -231,49 +276,59 @@ fivenets[[1]]
 
 ## `ergmito` example (cont'd)
 
-The same as you would do with the `ergm` package:
+The same as you would do with the `ergm` package:\linebreak[4]
 
 ```{r fit-fivenets, cache=TRUE}
-(model1 <- ergmito(fivenets ~ edges + nodematch("female")))
-```
-
-```{r fit-fivenets-print, results='asis', echo=FALSE, cache=TRUE}
-texreg::texreg(model1)
-# cat(gsub("#", "\\#", unclass(out), fixed=TRUE))
+model1 <- ergmito(fivenets ~ edges + nodematch("female"))
+summary(model1)
 ```
 
 ---
 
+Some features of this (\includegraphics[width=.1\linewidth]{lifecycle-experimental-orange.pdf}) R package
 
-```{r gof-fivenets, cache=TRUE}
-(gof1 <- gof_ergmito(model1))
-```
+\begincols
 
+\begincol{.65\linewidth}
+\begin{itemize}
+  \setlength\itemsep{.5cm}
+\item<2-> Built on top of \href{https://statnet.org}{\textbf{statnet}}'s \href{https://github.com/statnet/ergm}{\texttt{ergm}} R package.
+
+\item<3-> Allows estimating ERGMs for small networks (less than 7 and perhaps 6) via MLE.
+
+\item<4-> Implements pooled ERGM models.
+
+\item<5-> Includes a simulation function for efficiently drawing samples of small networks, and by \textbf{efficiently} we mean \textbf{fast}.
+\end{itemize}
+
+\endcol
+
+\begincol{.3\linewidth}
+
+\includegraphics{fig/logo.png}
+
+\endcol
+
+\endcols
+
+\uncover<6->{And much more!}
 
 ---
-
-```{r gof-fivenets-print, cache=TRUE, out.width=".7\\linewidth", fig.align='center', width=8, height=6}
-plot(gof1)
-```
-
-
 
 ## Thanks!
 
 \begin{centering}
-\includegraphics[width = .1\linewidth]{usc.pdf}
+\includegraphics[width = .4\linewidth]{fig/the-end.jpg}
 
 \large \textbf{\textcolor{USCCardinal}{George G. Vega Yon}}
 
-\normalsize Let's chat! 
 
 \href{mailto:vegayon@usc.edu}{vegayon@usc.edu} 
 
 \href{https://ggvy.cl}{https://ggvy.cl} 
 
-\includegraphics[width=.02\linewidth]{github.png}\href{https://github.com/gvegayon}{@gvegayon}
-
-\includegraphics[width=.02\linewidth]{twitter.png}\href{https://twitter.com/gvegayon}{@gvegayon}
+\includegraphics[width=.02\linewidth]{github.png}\href{https://github.com/gvegayon}{gvegayon}
+\includegraphics[width=.02\linewidth]{twitter.png}\href{https://twitter.com/gvegayon}{gvegayon}
 
 \end{centering}
 
